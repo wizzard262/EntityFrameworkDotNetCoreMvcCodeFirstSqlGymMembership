@@ -37,6 +37,6 @@ steps:
 - task: AzureWebApp@1
   displayName: 'Deploy to App Service'
   inputs:
-    azureSubscription: '<YOUR-SERVICE-CONNECTION>'
+    azureSubscription: 'GymMembership'
     appName: 'gym-membership-webapp'
     package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
