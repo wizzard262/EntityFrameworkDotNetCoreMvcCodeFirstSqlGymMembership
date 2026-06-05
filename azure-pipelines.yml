@@ -40,3 +40,26 @@ steps:
     azureSubscription: 'GymMembership'
     appName: 'gym-membership-webapp'
     package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+
+# 5. Fetch connection string from App Service
+- task: AzureCLI@2
+  displayName: 'Fetch connection string'
+  inputs:
+    azureSubscription: 'GymMembership'
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      $conn = az webapp config connection-string list `
+        --name gym-membership-webapp `
+        --resource-group ResourceGroup1 `
+        --query "[?name=='DefaultConnection'].value" -o tsv
+
+      echo "##vso[task.setvariable variable=DefaultConnection;issecret=true]$conn"
+
+# 6. Run EF Core migrations
+- task: DotNetCoreCLI@2
+  displayName: 'Run EF Core Migrations'
+  inputs:
+    command: 'custom'
+    custom: 'ef'
+    arguments: 'database update --connection "$(DefaultConnection)"'
