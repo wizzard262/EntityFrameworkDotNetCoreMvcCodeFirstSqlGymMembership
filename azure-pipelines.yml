@@ -73,4 +73,8 @@ steps:
   inputs:
     command: 'custom'
     custom: 'ef'
-    arguments: 'database update --connection "$(DefaultConnection)"'
+    arguments: >
+      database update
+      --project GymMembers/src/GymMembers.csproj
+      --startup-project GymMembers/src/GymMembers.csproj
+      --connection "$(DefaultConnection)"
