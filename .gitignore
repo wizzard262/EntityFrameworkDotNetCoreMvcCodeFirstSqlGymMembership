@@ -68,3 +68,16 @@ Migrations/obj/
 *.bak
 *.swp
 *.sln.cache
+
+
+# Terraform state
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
+crash.log
+
+.terraform/
+.terraform.lock.hcl
+terraform-provider-azurerm_v4.76.0_x5.exe
+LICENSE.txt

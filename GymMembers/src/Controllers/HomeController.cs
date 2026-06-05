@@ -12,11 +12,27 @@ public class HomeController(ApplicationDbContext db) : Controller
 
     public async Task<IActionResult> Index()
     {
+        return View();
+    }
+
+    // Free-Tier Azure DBs can go to sleep after inactivity, so we have this endpoint to wake it up.
+    public async Task<IActionResult> WakeDatabase([FromServices] ApplicationDbContext _db)
+    {
+        // A tiny, fast query that wakes the DB
+        await _db.Database.ExecuteSqlRawAsync("SELECT 1");
+        return Ok("Database is awake");
+    }
+
+
+    // This endpoint is called via AJAX to refresh the members table without reloading the whole page.
+    public async Task<IActionResult> GetMembers()
+    {
         var members = await _db.GymMembers
             .Include(m => m.ClassSessions)
             .OrderBy(m => m.LastName)
             .ToListAsync();
 
-        return View(members);
+        return PartialView("_MembersTable", members);
     }
+
 }

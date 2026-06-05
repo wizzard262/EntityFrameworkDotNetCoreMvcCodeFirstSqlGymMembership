@@ -1,6 +1,20 @@
 ﻿@model IEnumerable<GymMembers.Models.GymMember>
 
 <h1 class="mb-4">Entity Framework Code First Demo - Gym Members and Classes</h1>
+
+<hr />
+
+<h3>Gym Members</h3>
+
+<div id="members" style="color: red;">
+    Loading members...<br />
+    The Azure SQL DB is free-tier and so likely needs "waking-up".<br />
+    It may take a moment to load the data...
+</div>
+
+<hr />
+
+
 <p>
     This is a C# MVC project that creates a SQL Database via <b>Code First EntityFramework Database Migration</b>, populates it and renders its data.<br />
     It also demonstrates deployment to Azure via Infrastructure as Code (IaC) using  <b>Terraform </b>
@@ -8,7 +22,8 @@
 <ul>
     <li>Git repository hosted at: <a href="https://github.com/wizzard262/EntityFrameworkDotNetCoreMvcCodeFirstSqlGymMembership">https://github.com/wizzard262/EntityFrameworkDotNetCoreMvcCodeFirstSqlGymMembership</a></li>
 </ul>
-<h3>ode First EntityFramework Database Migration</h3>
+
+<h3>Code First EntityFramework Database Migration</h3>
 <ul>
     <li><b>GymMember</b> and <b>ClassSession</b> Data Models are defined.</li>
     <li>The <b>DbContext</b> defines a many-to-many relationship for: <i>A <b>GymMember</b> may attend many <b>ClassSession</b></i></li>
@@ -17,46 +32,65 @@
         <ul>
             <li>Database <b>GymMembership</b></li>
             <li>Database tables <b>GymMember</b> and <b>ClassSession</b></li>
-            <li>The implies a many-to-many joining table <b>GymMemberClassSession</b></li>
+            <li>The implied many-to-many joining table <b>GymMemberClassSession</b></li>
             <li>Test data, incuding a <b>GymMember</b> <i>(Alice Johnson)</i> attending several <b>ClassSession</b> <i>(Morning Yoga & HIIT Blast)</i></li>
         </ul>
     </li>
-    <li>Entity Framework creates an Azure SQL Database</li>
 </ul>
 
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Member</th>
-            <th>Joined</th>
-            <th>Classes</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var member in Model)
-        {
-            <tr>
-                <td>@member.FirstName @member.LastName</td>
-                <td>@member.JoinDate.ToShortDateString()</td>
-                <td>
-                    @if (member.ClassSessions.Any())
-                    {
-                        <ul class="mb-0">
-                            @foreach (var cls in member.ClassSessions)
-                            {
-                                <li>
-                                    <strong>@cls.Name</strong>
-                                    (@cls.StartTime.ToString("dd MMM yyyy HH:mm"))
-                                </li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <span class="text-muted">No classes assigned</span>
-                    }
-                </td>
-            </tr>
+<h3>Terraform Deployment to Azure</h3>
+<p>
+    See Terraform configuration file at: <a href="https://github.com/wizzard262/EntityFrameworkDotNetCoreMvcCodeFirstSqlGymMembership/tree/main/GymMembers/infra">https://github.com/wizzard262/EntityFrameworkDotNetCoreMvcCodeFirstSqlGymMembership/tree/main/GymMembers/infra</a>
+</p>
+<ul>
+    <li>Uses the existing Resource Group <b>ResourceGroup1</b></li>
+    <li>
+        Creates a new App Service Plan (it could not use any existing plan): <b>asp-gym-membership-b1</b> <br />
+        <b>N.B. Terraform cannot create Free-Tier App Service Plan. This was downgradable to Free via Azure Portal</b>
+    </li>
+    <li>
+        Creates a new Azure SQL Database: <b>GymMembership</b> on an existing Azure Sql Server: <b>wizzard262</b> <br />
+        <b>N.B. Terraform cannot create Free-Tier DB. This had to be added via Azure Portal</b>
+    </li>
+    <li>Creates a new Azure App Service (Web App) <b>gym-membership-webapp</b></li>
+    <li>Injects a ConnectionString into the App Service named: "<b>DefaultConnection"</b> pointing at the new Azure SQL Database: <b>GymMembership</b></li>
+    <li>Sets application settings for the Web App: <b>ASPNETCORE_ENVIRONMENT = "Development"</b></li>
+</ul>
+
+<h3>Azure DevOps Deployment</h3>
+Terraform creates Resources but a deployment Pipeline is still needed to deploy the resources:<a href="#"></a>
+<ul>
+    <li>C# MVC code to Azure App Service (Web App) <b>gym-membership-webapp</b></li>
+    <li>Database Migrations (schema and data) to the Azure SQL Database: <b>GymMembership</b></li>
+    <li>Azure DevOps PIpeline used</li>
+</ul>
+
+<script>
+    // function to wake the database (if it's cold) by making a simple request to the server
+    async function wakeDatabase() {
+        try {
+            await fetch("/Home/WakeDatabase");
+        } catch (e) {
+            console.error("Wake DB failed", e);
         }
-    </tbody>
-</table>
+    }
+    // function to fetch the members table HTML from the server and insert it into the page
+    async function loadMembers() {
+        try {
+            const response = await fetch("/Home/GetMembers");
+            const html = await response.text();
+            document.getElementById("members").innerHTML = html;
+        } catch (e) {
+            document.getElementById("members").innerHTML = "Failed to load members.";
+        }
+    }
+
+    // this event listener waits for the page to load, then wakes the database and loads the members table
+    window.addEventListener("load", async () => {
+        // Step 1: Wake the DB (slow if cold)
+        await wakeDatabase();
+
+        // Step 2: Load the table (fast once DB is awake)
+        await loadMembers();
+    });
+</script>
