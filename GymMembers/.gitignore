@@ -1,0 +1,70 @@
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.psess
+*.vsp
+*.vspx
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# ASP.NET / IIS
+wwwroot/lib/
+project.lock.json
+aspnet-client/
+node_modules/
+bower_components/
+.bundle/
+dist/
+
+# Logs
+*.log
+
+# Publish outputs
+publish/
+**/Properties/PublishProfiles/*.pubxml
+**/Properties/PublishProfiles/*.pubxml.user
+
+# Configuration secrets
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+
+# EF Core
+Migrations/obj/
+
+# Others
+*.tmp
+*.bak
+*.swp
+*.sln.cache
