@@ -16,6 +16,7 @@
 
 
 <p>
+    <a href="https://gym-membership-webapp.azurewebsites.net/">https://gym-membership-webapp.azurewebsites.net/</a><br />
     This is a C# MVC project that creates a SQL Database via <b>Code First EntityFramework Database Migration</b>, populates it and renders its data.<br />
     It also demonstrates deployment to Azure via Infrastructure as Code (IaC) using  <b>Terraform </b>
 </p>
@@ -49,10 +50,10 @@
         <b>N.B. Terraform cannot create Free-Tier App Service Plan. This was downgradable to Free via Azure Portal</b>
     </li>
     <li>
-        Creates a new Azure SQL Database: <b>GymMembership</b> on an existing Azure Sql Server: <b>wizzard262</b> <br />
+        Creates a new Azure SQL Database: <b>GymMembership</b> on an existing Azure Sql Server: <a href="wizzard262.database.windows.net">wizzard262.database.windows.net</a> <br />
         <b>N.B. Terraform cannot create Free-Tier DB. This had to be added via Azure Portal</b>
     </li>
-    <li>Creates a new Azure App Service (Web App) <b>gym-membership-webapp</b></li>
+    <li>Creates a new Azure App Service (Web App) <b>gym-membership-webapp</b> at:<a href="https://gym-membership-webapp.azurewebsites.net/">https://gym-membership-webapp.azurewebsites.net/</a></li>
     <li>Injects a ConnectionString into the App Service named: "<b>DefaultConnection"</b> pointing at the new Azure SQL Database: <b>GymMembership</b></li>
     <li>Sets application settings for the Web App: <b>ASPNETCORE_ENVIRONMENT = "Development"</b></li>
 </ul>
@@ -62,7 +63,7 @@ Terraform creates Resources but a deployment Pipeline is still needed to deploy 
 <ul>
     <li>C# MVC code to Azure App Service (Web App) <b>gym-membership-webapp</b></li>
     <li>Database Migrations (schema and data) to the Azure SQL Database: <b>GymMembership</b></li>
-    <li>Azure DevOps PIpeline used</li>
+    <li>Azure DevOps PIpeline used: <a href="https://github.com/wizzard262/EntityFrameworkDotNetCoreMvcCodeFirstSqlGymMembership/blob/main/azure-pipelines.yml">https://github.com/wizzard262/EntityFrameworkDotNetCoreMvcCodeFirstSqlGymMembership/blob/main/azure-pipelines.yml</a></li>
 </ul>
 
 <script>
