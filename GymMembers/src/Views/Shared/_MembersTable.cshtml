@@ -1,37 +1,37 @@
 ﻿@model IEnumerable<GymMembers.Models.GymMember>
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Member</th>
-            <th>Joined</th>
-            <th>Classes</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var member in Model)
-        {
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
             <tr>
-                <td>@member.FirstName @member.LastName</td>
-                <td>@member.JoinDate.ToShortDateString()</td>
-                <td>
-                    @if (member.ClassSessions.Any())
-                    {
-                        <ul class="mb-0">
-                            @foreach (var cls in member.ClassSessions)
-                            {
-                                <li>
-                                    <strong>@cls.Name</strong>
-                                    (@cls.StartTime.ToString("dd MMM yyyy HH:mm"))
-                                </li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <span class="text-muted">No classes assigned</span>
-                    }
-                </td>
+                <th>Member</th>
+                <th>Joined</th>
+                <th>Classes</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var member in Model)
+            {
+                <tr>
+                    <td data-label="Member"><b>@member.FirstName @member.LastName</b></td>
+                    <td data-label="Joined">@member.JoinDate.ToString("d MMM yyyy")</td>
+                    <td data-label="Classes">
+                        @if (member.ClassSessions.Any())
+                        {
+                            <div>
+                                @foreach (var cls in member.ClassSessions.OrderBy(c => c.StartTime))
+                                {
+                                    <span class="chip">@cls.Name &middot; @cls.StartTime.ToString("d MMM HH:mm")</span>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="muted">No classes</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<p class="muted small">@Model.Count() members, @Model.SelectMany(m => m.ClassSessions).Select(c => c.Name).Distinct().Count() different classes.</p>

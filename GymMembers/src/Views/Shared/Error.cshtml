@@ -3,23 +3,23 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<header class="hero">
+    <div class="wrap">
+        <p class="eyebrow">Gym Membership</p>
+        <h1>Something went wrong</h1>
+        <p class="lead">The page couldn't be shown. The database may be waking up: try again in a minute.</p>
+        <div class="hero-actions">
+            <a class="button" href="/">Back to the home page</a>
+        </div>
+    </div>
+</header>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+<main class="wrap grid">
+    <section class="card card-wide">
+        @if (Model.ShowRequestId)
+        {
+            <p><b>Request ID:</b> <code>@Model.RequestId</code></p>
+        }
+        <p class="muted small">Running in the <b>Development</b> environment shows the full error, which is useful locally but should not be used on a live site.</p>
+    </section>
+</main>
